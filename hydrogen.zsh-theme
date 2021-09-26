@@ -88,6 +88,12 @@ function search_history_with_text_already_inputted() {
     bindkey "${terminfo[kcud1]}" history-substring-search-down
 }
 
+# Required for the above function to work properly
+function zle-line-init() {
+    (( ! ${+terminfo[smkx]} )) || echoti smkx
+}
+zle -N zle-line-init
+
 function set_tab_completion_menu_bindings() {
     # Highlight current entry in the tab completion menu
     zstyle ':completion:*' menu select
