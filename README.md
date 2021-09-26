@@ -3,6 +3,8 @@
 hydrogen is a simple multiline zsh theme. It shows username, hostname, current
 directory and `git` status.
 
+![](./screenshot.png)
+
 ## Getting started
 
 ### Requirements
