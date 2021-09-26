@@ -1,43 +1,36 @@
+setopt PROMPT_SUBST
+
+function main() {
+    set_colours
+
+    PROMPT='$(fill_line "$(top_right_part)" "$(gitstatus)      ")'
+    PROMPT+=$'\n'
+    PROMPT+='└ '
+
+    # If the last exit code is > 0, the integer between brackets will be coloured
+    # red, otherwise green (indicating success)
+    RPROMPT="[%(?.${FG_RPROMPT}%?${FG_CLR}.${FG_RED}%?${FG_CLR})]"
+}
+
 function set_colours() {
     # FG = ForeGround
     FG_CLR='%F{default}'
 
-    FG_YELLOW='%F{11}'
-    FG_GREEN='%F{34}'
-    FG_RED='%F{9}'
-    FG_BLUE='%F{68}'
-
+    FG_RPROMPT='%F{34}'
     FG_USERNAME='%F{167}'
     FG_HOSTNAME='%F{67}'
     FG_PATH="%F{43}"
-
-    # BG = BackGround
-    BG_CLR='%K{default}'
 }
-set_colours
 
-# Use LS_COLORS when completing filenames
-zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
-
-function define_prompt_structure() {
-    # The structure of the prompt basically looks something like:
-    # ┌─SECTION-A | SECTION-B | SECTION-C
-    # └                                                SECTION-D
-
-    ## Top line
+function top_right_part()
+{
     # Username and hostname
     SECTION_A="(${FG_USERNAME}%n${FG_CLR}@${FG_HOSTNAME}%m${FG_CLR})"
-
     # Path
     SECTION_B="${FG_PATH}%~${FG_CLR}"
 
-    # Git status, coming from a custom script. Defined in the precmd() function
-
-    # If the last exit code is > 0, the integer between brackets will be coloured
-    # red, otherwise green (indicating success)
-    SECTION_D="[%(?.${FG_GREEN}%?${FG_CLR}.${FG_RED}%?${FG_CLR})]"
+    echo "┌─${SECTION_A} | ${SECTION_B}"
 }
-define_prompt_structure
 
 ###
 # Usage: fill_line LEFT RIGHT
@@ -53,10 +46,10 @@ function fill_line() {
     local -i pad_len=$((COLUMNS - left_len - right_len - ${ZLE_RPROMPT_INDENT:-1}))
     if (( pad_len < 1 )); then
         # Not enough space for the right part. Drop it.
-        typeset -g REPLY=$1
+        echo "$1"
     else
         local pad=${(pl.$pad_len.. .)}  # pad_len spaces
-        typeset -g REPLY="${1}${pad}${2}"
+        echo "${1}${pad}${2}"
     fi
 }
 
@@ -78,63 +71,12 @@ function prompt_length() {
             (( ${${(%):-$1%$m(l.x.y)}[-1]} = m ))
         done
     fi
-    typeset -g REPLY=$x
+    typeset -g REPLY="$x"
 }
-
-# Always update git status for the prompt and draw upper part of prompt
-function precmd() {
-    SECTION_C="$(gitstatus)"
-
-    local top_left="┌─${SECTION_A} | ${SECTION_B}"
-    local top_right="${SECTION_C}      " # six spaces from corner
-    local bottom_left="└ "
-    fill_line "$top_left" "$top_right"
-    export PS1=$REPLY$'\n'$bottom_left
-    unset REPLY
-}
-
-function set_prompts() {
-    export RPS1="${SECTION_D}"
-
-    # Continuation line prompt
-    export PS2="(inp)> "
-
-    # Prompt used by "select" shell builtin
-    export PS3="#?"
-
-    # Prompt used by "set -x" option, prefixing each line of traced input
-    export PS4="%N:%i>"
-}
-set_prompts
-
-# Redefine zle builtin to not clean precmd output
-function clear-screen() {
-    echoti clear
-    precmd
-    zle redisplay
-}
-
-# Update zle to use previously defined function
-zle -N clear-screen
-
-# Dunno what this does, but apparently it does something essential for the
-# previous function to work correctly.
-function zle-line-init() {
-    (( ! ${+terminfo[smkx]} )) || echoti smkx
-}
-zle -N zle-line-init
 
 # Pressing UP and DOWN keys will go up and down in the entries in hitory that
 # start with what has already been typed in
 function search_history_with_text_already_inputted() {
-    # If not using zsh-history-substring-search plugin, use:
-    #autoload -U history-search-end
-    #zle -N history-beginning-search-backward-end history-search-end
-    #zle -N history-beginning-search-forward-end history-search-end
-    #bindkey "${terminfo[kcuu1]}" history-beginning-search-backward-end
-    #bindkey "${terminfo[kcud1]}" history-beginning-search-forward-end
-
-    # Otherwise, use this:
     bindkey "${terminfo[kcuu1]}" history-substring-search-up
     bindkey "${terminfo[kcud1]}" history-substring-search-down
 }
@@ -172,3 +114,8 @@ function set_key_bindings() {
     set_tab_completion_menu_bindings
 }
 set_key_bindings
+
+# Use LS_COLORS when completing filenames
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+
+main
