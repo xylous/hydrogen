@@ -1,3 +1,14 @@
+# vim:ft=zsh
+#
+# hydrogen zsh theme
+# https://github.com/xylous/hydrogen
+#
+# Code licensed under the MIT License
+#   https://raw.githubusercontent.com/xylous/hydrogen/master/LICENSE
+#
+# @author xylous <xylous.e@gmail.com>
+# @maintainer xylous <xylous.e@gmail.com>
+
 setopt PROMPT_SUBST
 
 function main() {
@@ -21,12 +32,12 @@ function main() {
 
 function set_colours() {
     # FG = ForeGround
-    FG_CLR='%F{default}'
+    export FG_CLR='%F{default}'
 
-    FG_RPROMPT='%F{34}'
-    FG_USERNAME='%F{167}'
-    FG_HOSTNAME='%F{67}'
-    FG_PATH="%F{43}"
+    export FG_RPROMPT='%F{34}'
+    export FG_USERNAME='%F{167}'
+    export FG_HOSTNAME='%F{67}'
+    export FG_PATH="%F{43}"
 }
 
 function top_right_part()
