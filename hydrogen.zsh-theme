@@ -34,10 +34,17 @@ function set_colours() {
     # FG = ForeGround
     export FG_CLR='%F{default}'
 
-    export FG_RPROMPT='%F{34}'
-    export FG_USERNAME='%F{167}'
-    export FG_HOSTNAME='%F{67}'
-    export FG_PATH="%F{43}"
+    if [[ $(tput colors) -ge 256 ]]; then
+        export FG_RPROMPT='%F{34}'
+        export FG_USERNAME='%F{167}'
+        export FG_HOSTNAME='%F{67}'
+        export FG_PATH="%F{43}"
+    else
+        export FG_RPROMPT='%F{green}'
+        export FG_USERNAME='%F{red}'
+        export FG_HOSTNAME='%F{blue}'
+        export FG_PATH="%F{cyan}"
+    fi
 }
 
 function top_right_part()
