@@ -20,7 +20,7 @@ function main() {
 
     # If the last exit code is > 0, the integer between brackets will be coloured
     # red, otherwise green (indicating success)
-    RPROMPT="[%(?.${FG_RPROMPT}%?${FG_CLR}.${FG_RED}%?${FG_CLR})]"
+    RPROMPT="[%(?.${FG_GREEN}%?${FG_CLR}.${FG_RED}%?${FG_CLR})]"
 
     search_history_with_text_already_inputted
     set_tab_completion_menu_bindings
@@ -35,15 +35,18 @@ function set_colours() {
     export FG_CLR='%F{default}'
 
     if [[ $(tput colors) -ge 256 ]]; then
-        export FG_RPROMPT='%F{34}'
         export FG_USERNAME='%F{167}'
         export FG_HOSTNAME='%F{67}'
         export FG_PATH="%F{43}"
+        export FG_GREEN='%F{34}'
+        export FG_RED='%F{9}'
     else
-        export FG_RPROMPT='%F{green}'
         export FG_USERNAME='%F{red}'
         export FG_HOSTNAME='%F{blue}'
         export FG_PATH="%F{cyan}"
+
+        export FG_GREEN='%F{green}'
+        export FG_RED='%F{red}'
     fi
 }
 
