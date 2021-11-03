@@ -13,7 +13,7 @@ function hydrogen_theme() {
     setopt PROMPT_SUBST
     set_colours
 
-    PROMPT='$(fill_line "$(top_right_part)" "$(gitstatus)      ")'
+    PROMPT='$(fill_line "$(top_left_part)" "$(gitstatus)      ")'
     PROMPT+=$'\n'
     PROMPT+='└ '
 
@@ -48,7 +48,7 @@ function set_colours() {
     fi
 }
 
-function top_right_part()
+function top_left_part()
 {
     # Username and hostname
     SECTION_A="(${FG_USERNAME}%n${FG_CLR}@${FG_HOSTNAME}%m${FG_CLR})"
