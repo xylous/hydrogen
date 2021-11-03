@@ -9,9 +9,8 @@
 # @author xylous <xylous.e@gmail.com>
 # @maintainer xylous <xylous.e@gmail.com>
 
-setopt PROMPT_SUBST
-
-function main() {
+function hydrogen_theme() {
+    setopt PROMPT_SUBST
     set_colours
 
     PROMPT='$(fill_line "$(top_right_part)" "$(gitstatus)      ")'
@@ -44,7 +43,6 @@ function set_colours() {
         export FG_USERNAME='%F{red}'
         export FG_HOSTNAME='%F{blue}'
         export FG_PATH="%F{cyan}"
-
         export FG_GREEN='%F{green}'
         export FG_RED='%F{red}'
     fi
@@ -102,46 +100,4 @@ function prompt_length() {
     typeset -g REPLY="$x"
 }
 
-# Pressing UP and DOWN keys will go up and down in the entries in hitory that
-# start with what has already been typed in
-function search_history_with_text_already_inputted() {
-    bindkey "${terminfo[kcuu1]}" history-substring-search-up
-    bindkey "${terminfo[kcud1]}" history-substring-search-down
-}
-
-# Required for the above function to work properly
-function zle-line-init() {
-    (( ! ${+terminfo[smkx]} )) || echoti smkx
-}
-zle -N zle-line-init
-
-function set_tab_completion_menu_bindings() {
-    # Highlight current entry in the tab completion menu
-    zstyle ':completion:*' menu select
-    zmodload zsh/complist
-
-    # Use hjkl to navigate tab completion menu
-    bindkey -M menuselect "h" vi-backward-char
-    bindkey -M menuselect "j" vi-down-line-or-history
-    bindkey -M menuselect "k" vi-up-line-or-history
-    bindkey -M menuselect "l" vi-forward-char
-
-    # Use Ctrl-[N|P] to navigate tab completion menu
-    bindkey '^N' expand-or-complete
-    bindkey '^P' reverse-menu-complete
-}
-
-function set_key_bindings() {
-    # Enable vim mode
-    bindkey -v
-
-    # Remove character under cursor when the <Delete> key is pressed
-    bindkey "^[[3~" vi-delete-char
-    bindkey -a "^[[3~" vi-delete-char
-
-    # Move just a character when Ctrl-[LEFT|RIGHT] is pressed
-    bindkey "^[[1;5D" backward-char
-    bindkey "^[[1;5C" forward-char
-}
-
-main
+hydrogen_theme
