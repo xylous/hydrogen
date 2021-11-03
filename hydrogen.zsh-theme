@@ -20,13 +20,6 @@ function hydrogen_theme() {
     # If the last exit code is > 0, the integer between brackets will be coloured
     # red, otherwise green (indicating success)
     RPROMPT="[%(?.${FG_GREEN}%?${FG_CLR}.${FG_RED}%?${FG_CLR})]"
-
-    search_history_with_text_already_inputted
-    set_tab_completion_menu_bindings
-    set_key_bindings
-
-    # Use LS_COLORS when completing filenames
-    zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 }
 
 function set_colours() {
