@@ -9,6 +9,10 @@
 # @author xylous <xylous.e@gmail.com>
 # @maintainer xylous <xylous.e@gmail.com>
 
+###
+# usage: hydrogen_theme
+# Set PROMPT and RPROMPT to display the theme
+###
 function hydrogen_theme() {
     setopt PROMPT_SUBST
     set_colours
@@ -19,34 +23,42 @@ function hydrogen_theme() {
 
     # If the last exit code is > 0, the integer between brackets will be coloured
     # red, otherwise green (indicating success)
-    RPROMPT="[%(?.${FG_GREEN}%?${FG_CLR}.${FG_RED}%?${FG_CLR})]"
+    RPROMPT="[%(?.${HYDROGEN_GREEN}%?${HYDROGEN_CLR}.${HYDROGEN_RED}%?${HYDROGEN_CLR})]"
 }
 
+###
+# usage: set_colours
+# Export global variables that hydrogen uses. If terminal isn't capable of
+# handling more than 256 colours, use standard 8 bit palette
+###
 function set_colours() {
-    # FG = ForeGround
-    export FG_CLR='%F{default}'
+    export HYDROGEN_CLR='%F{default}'
 
     if [[ $(tput colors) -ge 256 ]]; then
-        export FG_USERNAME='%F{167}'
-        export FG_HOSTNAME='%F{67}'
-        export FG_PATH="%F{43}"
-        export FG_GREEN='%F{34}'
-        export FG_RED='%F{9}'
+        export HYDROGEN_USERNAME='%F{167}'
+        export HYDROGEN_HOSTNAME='%F{67}'
+        export HYDROGEN_PATH="%F{43}"
+        export HYDROGEN_GREEN='%F{34}'
+        export HYDROGEN_RED='%F{9}'
     else
-        export FG_USERNAME='%F{red}'
-        export FG_HOSTNAME='%F{blue}'
-        export FG_PATH="%F{cyan}"
-        export FG_GREEN='%F{green}'
-        export FG_RED='%F{red}'
+        export HYDROGEN_USERNAME='%F{red}'
+        export HYDROGEN_HOSTNAME='%F{blue}'
+        export HYDROGEN_PATH="%F{cyan}"
+        export HYDROGEN_GREEN='%F{green}'
+        export HYDROGEN_RED='%F{red}'
     fi
 }
 
+###
+# usage: top_left_part
+# Print the top left part of the prompt to stdout, with all variables expanded
+###
 function top_left_part()
 {
     # Username and hostname
-    SECTION_A="(${FG_USERNAME}%n${FG_CLR}@${FG_HOSTNAME}%m${FG_CLR})"
+    SECTION_A="(${HYDROGEN_USERNAME}%n${HYDROGEN_CLR}@${HYDROGEN_HOSTNAME}%m${HYDROGEN_CLR})"
     # Path
-    SECTION_B="${FG_PATH}%~${FG_CLR}"
+    SECTION_B="${HYDROGEN_PATH}%~${HYDROGEN_CLR}"
 
     echo "┌─${SECTION_A} | ${SECTION_B}"
 }
